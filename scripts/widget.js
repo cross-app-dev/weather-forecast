@@ -2,6 +2,7 @@ function buildWidget(cssClass){
 
 
     console.log("Start to fetch data from Forecast.io website using Ajax");
+//    wdgtSetIcon("widget-forecast-icon","rain");
     var xhr = $.ajax({
     url :  constructURL(),
     dataType :"jsonp",
@@ -41,4 +42,13 @@ function constructURL(){
     ;
 
     return url;
+}
+
+function wdgtSetIcon( canvasID, weatherState){
+    /*In html doc , you must have:
+    <canvas id="widget-forecast-icon" width="128" height="128"></canvas>*/
+
+    var skycons = new Skycons();
+    skycons.set(canvasID, weatherState);
+    skycons.play();
 }
