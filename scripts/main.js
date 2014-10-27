@@ -14,6 +14,7 @@ document.addEventListener("DOMContentLoaded", function(){
     css.setAttribute("rel", "stylesheet");
     /* TODO: check where widget.css should be located exactly? */
     css.setAttribute("href", "css/widget.css");
+    document.querySelector("head").appendChild(css);
 
     /*****************************************************************/
     /****     Load the jQuery file and apply it to the page       ****/
