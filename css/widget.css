@@ -1,3 +1,100 @@
-.mywidget{
+/* TODO: Risk of overwritting the main website box sizing if it was not set to border-box*/
+html {
+  box-sizing: border-box;
+}
 
+.weather-forecast{
+    /* widget would fit into an area on a page that was between 500px and 800px wide*/
+    /* since there is 5% left/right padding is added in wrapper class in main website, remaining width
+    must be set to weather forecast widget 100%-10%=90%*/
+    width: 90%;
+    max-width: 800px;
+    margin: 0 auto;
+/*    outline: 1px solid green;*/
+}
+
+.panel {
+    width: 100%;
+    margin: 0 auto;
+    height: 60px;
+    padding: 2%;
+    border-top: 1px solid #DDD;
+    border-bottom: 1px solid #DDD;
+    cursor: pointer;
+    background-color: #F8F8F8;
+
+    /* TODO: you may remove this animation once you managed to do it using jQuery.
+-webkit-transition: transform 0.15s ease-in;
+-moz-transition: transform 0.15s ease-in;
+-o-transition: transform 0.15s ease-in;
+transition: transform 0.15s ease-in;
+-webkit-transition: -o-transform 0.15s ease-in;
+-moz-transition: -o-transform 0.15s ease-in;
+-o-transition: -o-transform 0.15s ease-in;
+transition: -o-transform 0.15s ease-in;
+-webkit-transition: -ms-transform 0.15s ease-in;
+-moz-transition: -ms-transform 0.15s ease-in;
+-o-transition: -ms-transform 0.15s ease-in;
+transition: -ms-transform 0.15s ease-in;
+-webkit-transition: -moz-transform 0.15s ease-in;
+-moz-transition: -moz-transform 0.15s ease-in;
+-o-transition: -moz-transform 0.15s ease-in;
+transition: -moz-transform 0.15s ease-in;
+-webkit-transition: -webkit-transform 0.15s ease-in;
+-moz-transition: -webkit-transform 0.15s ease-in;
+-o-transition: -webkit-transform 0.15s ease-in;
+transition: -webkit-transform 0.15s ease-in;
+*/
+}
+
+.panel:hover{
+    background-color: #DDD;
+}
+
+.today{
+    display: inline-block;
+    width: 20%;
+    text-transform: uppercase;
+/*    outline: 1px solid orange;*/
+}
+
+.summary{
+    display: inline-block;
+    width: 40%;
+/*    outline: 1px solid green;*/
+}
+
+.today-icon-container{
+    display: inline-block;
+    width: 20%;
+    vertical-align: middle;
+/*    outline: 1px solid red;*/
+}
+
+.widget-today-icon{
+
+}
+
+.widget-button{
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    color: #BBB;
+    background-color: #BBB;
+    text-align:center;
+/*    outline: 1px solid green;*/
+}
+
+.plus,
+.minus{
+    color: white;
+    font-size: 22px;
+    line-height: 20px;
+    vertical-align:text-top;
+/*    outline: 1px solid red;*/
+}
+
+.minus{
+    display: none;
 }
