@@ -21,7 +21,8 @@ document.addEventListener("DOMContentLoaded", function(){
     var jq = document.createElement("script");
     jq.addEventListener("load", buildForecastWidget );
     document.querySelector("head").appendChild(jq);
-    jq.setAttribute("src","//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js");
+//    jq.setAttribute("src","//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js");
+    jq.setAttribute("src","scripts/jquery.min.js");
 
     /*****************************************************************/
     /****      Load the widget JS and apply it to the page        ****/
@@ -44,7 +45,8 @@ document.addEventListener("DOMContentLoaded", function(){
     var skyconsScript = document.createElement("script");
     skyconsScript.addEventListener("load",buildForecastWidget);
     document.querySelector("head").appendChild(skyconsScript);
-    skyconsScript.setAttribute("src", "//cdnjs.cloudflare.com/ajax/libs/skycons/1396634940/skycons.min.js");
+//    skyconsScript.setAttribute("src", "//cdnjs.cloudflare.com/ajax/libs/skycons/1396634940/skycons.min.js");
+    skyconsScript.setAttribute("src", "scripts/skycons.min.js");
 });
 
 function buildForecastWidget(){
@@ -52,6 +54,6 @@ function buildForecastWidget(){
         if(scriptsLoaded === 3){
           //call the function in My widget script to load the JSON and build the widget
           console.log("all three are scripts loaded");
-          buildWidget(".mywidget");
+          buildWidget(".weather-forecast");
         }
     }
