@@ -25,6 +25,7 @@ function buildWidget(cssWeatherClass){
 //     });
 
     displayDayInfo(cssWeatherClass , data);
+//    displayHourlyInfo(data);
 }
 
 function constructURL(){
@@ -61,12 +62,21 @@ function displayDayInfo(cssWeatherClass , data){
     /*  1. Create new div element and set its class to panel class.
         2. Set display hourly weather information upon clicking on new panel div
         3. append panel div to current weather forecast div*/
-    $panel = $("<div></div>").addClass("panel").
+    var $panel = $("<div></div>").addClass("panel").
              click(function (){
-                console.log("Display hourly weather information");
+                console.log("dialy panel has been clicked");
                 $("#hourly-panel").slideToggle( "slow" );
                 $(".minus").toggle();
                 $(".plus").toggle();
+
+                 var myDisplay = $(".plus").css("display");
+                 if ("none" === myDisplay){
+                     console.log("block value of plus class is", myDisplay);
+                     displayHourlyInfo(data);
+                 }else{
+                     console.log("none display value of plus class is", myDisplay);
+                     $("#hourly-panel").empty();
+                 }
              }).
              appendTo($(cssWeatherClass));;
 
@@ -91,4 +101,32 @@ function displayDayInfo(cssWeatherClass , data){
                 appendTo($panel);
 
     $panel.append('<div id="hourly-panel"></div>');
+}
+
+function displayHourlyInfo(data){
+    var $slider = $('<div id="slider"></div>')
+                    .appendTo($("#hourly-panel"));
+
+    $slider.slider(
+        {   min   : 0,
+            max   : 23,
+            value : 10,
+            create: onCreateSlider,
+            change: onChangeSliderVlue,
+            slide : onSlidingover
+        });
+}
+
+function onCreateSlider(event, ui){
+    console.log("slider has been created with value = ", $(this).slider("option", "value"));
+    /*To set slider value at run-time use: */
+    //$( "#sliderID" ).slider( "option", "value", 10 );
+}
+
+function onChangeSliderVlue(event ,ui){
+    console.log("value after sliding becomes: ", ui.value);
+}
+
+function onSlidingover(event, ui){
+    console.log("sliding value is ", ui.value);
 }

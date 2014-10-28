@@ -87,3 +87,31 @@ html {
     height: 200px;
     background-color: yellow;
 }
+
+.slider .ui-state-default {
+/*    background: none;*/
+    border-style: none;
+}
+.ui-slider .ui-slider-handle{
+    width:25px;
+    height:75px;
+    /*TODO: not sure why background color didn't change upon using background-color property but
+      it is changed using background property without setting any image url*/
+    background: red;
+    border:none;
+    outline: none;
+}
+
+.ui-slider .ui-slider-handle:hover{
+    background: green;
+}
+
+.ui-slider .ui-slider-handle:focus{
+    background: yellow;
+    outline: none;
+}
+
+.ui-slider .ui-slider-handle:active{
+    background: grey;
+    outline: 1px solid green;
+}

@@ -8,6 +8,14 @@ var scriptsLoaded = 0;
 
 document.addEventListener("DOMContentLoaded", function(){
     /*****************************************************************/
+    /****      Load jQuery-UI-Css and apply it to the page        ****/
+    /*****************************************************************/
+    var jqUiCss = document.createElement("link");
+    jqUiCss.setAttribute("rel", "stylesheet");
+    jqUiCss.setAttribute("href", "//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css");
+    document.querySelector("head").appendChild(jqUiCss);
+
+    /*****************************************************************/
     /****      Load the CSS file and apply it to the page         ****/
     /*****************************************************************/
     var css = document.createElement("link");
@@ -22,8 +30,8 @@ document.addEventListener("DOMContentLoaded", function(){
     var jq = document.createElement("script");
     jq.addEventListener("load", buildForecastWidget );
     document.querySelector("head").appendChild(jq);
-//    jq.setAttribute("src","//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js");
-    jq.setAttribute("src","scripts/jquery.min.js");
+//    jq.setAttribute("src","//code.jquery.com/jquery-1.10.2.js");
+    jq.setAttribute("src","//code.jquery.com/jquery-1.10.2.js");
 
     /*****************************************************************/
     /****      Load the widget JS and apply it to the page        ****/
@@ -48,11 +56,21 @@ document.addEventListener("DOMContentLoaded", function(){
     document.querySelector("head").appendChild(skyconsScript);
 //    skyconsScript.setAttribute("src", "//cdnjs.cloudflare.com/ajax/libs/skycons/1396634940/skycons.min.js");
     skyconsScript.setAttribute("src", "scripts/skycons.min.js");
+
+    /*****************************************************************/
+    /****      Load jQuery-UI and apply it to the page           ****/
+    /*****************************************************************/
+    var jqUi = document.createElement("script");
+    jqUi.addEventListener("load", buildForecastWidget );
+    document.querySelector("head").appendChild(jqUi);
+//    jqUi.setAttribute("src","//code.jquery.com/ui/1.11.2/jquery-ui.js");
+    jqUi.setAttribute("src","//code.jquery.com/ui/1.11.2/jquery-ui.js");
 });
 
 function buildForecastWidget(){
         scriptsLoaded++;
-        if(scriptsLoaded === 3){
+
+        if(scriptsLoaded === 4){
           //call the function in My widget script to load the JSON and build the widget
           console.log("all three are scripts loaded");
           buildWidget(".weather-forecast");
