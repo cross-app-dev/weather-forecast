@@ -68,11 +68,12 @@ document.addEventListener("DOMContentLoaded", function(){
 });
 
 function buildForecastWidget(){
-        scriptsLoaded++;
+    console.log("current file that is loaded is:",  this);
+    scriptsLoaded++;
 
-        if(scriptsLoaded === 4){
-          //call the function in My widget script to load the JSON and build the widget
-          console.log("all three are scripts loaded");
-          buildWidget(".weather-forecast");
-        }
+    if(scriptsLoaded === 4){
+      //call the function in My widget script to load the JSON and build the widget
+      console.log("all three are scripts loaded");
+      buildWidget(".weather-forecast");
     }
+}
