@@ -2,28 +2,27 @@ function buildWidget(cssWeatherClass){
 
 
     console.log("Start to fetch data from Forecast.io website using Ajax");
-//    wdgtSetIcon("widget-forecast-today-icon","rain");
-    var xhr = $.ajax({
-    url :  constructURL(),
-    dataType :"jsonp",
-    /*xhrFields: {
-        withCredentials: true
-    },*/
-    type: "GET"}).done( function( data ){
-
-        // this function will run if the AJAX call is successful
-        console.log("forecast data is loaded succsfully");
-        console.log( data );
-        displayDayInfo(cssWeatherClass , data);
-     }).fail( function( ){
-
-        //this function will run if the AJAX call fails for any reason.
-        console.log("failed to load forecast data");
-        console.log( xhr.status );
-
-        /*TODO: handle error cases.*/
-
-     });
+//    var xhr = $.ajax({
+//    url :  constructURL(),
+//    dataType :"jsonp",
+//    //xhrFields: {
+//    //    withCredentials: true
+//    //},
+//    type: "GET"}).done( function( data ){
+//
+//        // this function will run if the AJAX call is successful
+//        console.log("forecast data is loaded succsfully");
+//        console.log( data );
+//        displayDayInfo(cssWeatherClass , data);
+//     }).fail( function( ){
+//
+//        //this function will run if the AJAX call fails for any reason.
+//        console.log("failed to load forecast data");
+//        console.log( xhr.status );
+//
+//        //TODO: handle error cases.
+//
+//     });
 
     displayDayInfo(cssWeatherClass , data);
 }
