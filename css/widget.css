@@ -13,38 +13,18 @@ html {
 /*    outline: 1px solid green;*/
 }
 
+/*******************************************************
+        Daily Weather styling information
+******************************************************/
 .panel {
     width: 100%;
     margin: 0 auto;
-    height: 60px;
+    min-height: 60px;
     padding: 2%;
     border-top: 1px solid #DDD;
     border-bottom: 1px solid #DDD;
     cursor: pointer;
     background-color: #F8F8F8;
-
-    /* TODO: you may remove this animation once you managed to do it using jQuery.
--webkit-transition: transform 0.15s ease-in;
--moz-transition: transform 0.15s ease-in;
--o-transition: transform 0.15s ease-in;
-transition: transform 0.15s ease-in;
--webkit-transition: -o-transform 0.15s ease-in;
--moz-transition: -o-transform 0.15s ease-in;
--o-transition: -o-transform 0.15s ease-in;
-transition: -o-transform 0.15s ease-in;
--webkit-transition: -ms-transform 0.15s ease-in;
--moz-transition: -ms-transform 0.15s ease-in;
--o-transition: -ms-transform 0.15s ease-in;
-transition: -ms-transform 0.15s ease-in;
--webkit-transition: -moz-transform 0.15s ease-in;
--moz-transition: -moz-transform 0.15s ease-in;
--o-transition: -moz-transform 0.15s ease-in;
-transition: -moz-transform 0.15s ease-in;
--webkit-transition: -webkit-transform 0.15s ease-in;
--moz-transition: -webkit-transform 0.15s ease-in;
--o-transition: -webkit-transform 0.15s ease-in;
-transition: -webkit-transform 0.15s ease-in;
-*/
 }
 
 .panel:hover{
@@ -97,4 +77,14 @@ transition: -webkit-transform 0.15s ease-in;
 
 .minus{
     display: none;
+}
+
+
+/*******************************************************
+        Hourly Weather styling information
+******************************************************/
+#hourly-panel{
+    display: none;
+    height: 200px;
+    background-color: yellow;
 }
