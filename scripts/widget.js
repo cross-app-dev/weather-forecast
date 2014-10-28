@@ -85,9 +85,9 @@ function displayDayInfo(cssWeatherClass , data){
     $panel.append('<p class="summary">' +data.daily.data[0].summary.slice(0,-1) +'</p>');
 
     /* Add circular button to indicate that this section is expandable*/
-    $button = $("<div></div>").addClass("widget-button").
-                append('<div class="plus">+</div>').
-                append('<div class="minus">-</div>').
+    $button = $("<div></div>").addClass("circular-button").
+                append('<span class="plus">+</span>').
+                append('<span class="minus">-</span>').
                 appendTo($panel);
 
     $panel.append('<div id="hourly-panel"></div>');
