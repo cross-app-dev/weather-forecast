@@ -25,6 +25,7 @@ function buildWidget(weatherWidgetClass){
 //     });
 
     createDailyWeatherPanel(weatherWidgetClass , data);
+    //createHourlyWeatherPanel(data);
 }
 
 function constructURL(){
@@ -143,6 +144,16 @@ function createHourlyWeatherPanel(data){
             change: onChangeSliderVlue,
             slide : onSlidingover
         });
+
+    /* create hours ticks dashes for even and odd hours*/
+    $hoursTick = $('<div class="hour-ticks"></div>').appendTo($("#hourly-panel"));
+    for (var i=0; i< 24; i++){
+        $hoursTick.append('<span class="'+getHoursTickClass(i)+'"></span>');
+    }
+}
+
+function getHoursTickClass(i){
+    return (i%2==0)? "even":"odd";
 }
 
 function onCreateSlider(event, ui){

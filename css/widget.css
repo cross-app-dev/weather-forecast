@@ -88,6 +88,7 @@ html {
     background-color: #9FB6CC;
 }
 
+/********      Slider properties  *******/
 .ui-slider{
     margin-top: 10%;
     background: #CED0A0;
@@ -119,4 +120,23 @@ html {
 .ui-slider .ui-slider-handle:active{
     background: #3C444C;
     outline: 1px solid green;
+}
+
+
+/****** Hours ticks properties ******/
+.hour-ticks span {
+    display: inline-block;
+    border: 1px solid red;
+/*    margin-left: 32.69px;*/
+    margin-left: 4.085%;
+}
+
+.hour-ticks span:first-child {
+    margin-left: 0%;
+}
+.hour-ticks span.even {
+    height: 5px;
+}
+ .hour-ticks span.odd {
+     height: 8px;
 }
