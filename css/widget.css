@@ -104,6 +104,7 @@ html {
     background: #778899;
     border:none;
     outline: none;
+    opacity: 0.5;
 }
 
 /*  ui-slider: The track of the slider control.
