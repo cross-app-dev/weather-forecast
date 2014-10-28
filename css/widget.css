@@ -14,9 +14,9 @@ html {
 }
 
 /*******************************************************
-        Daily Weather styling information
+        Daily Weather Panel styling information
 ******************************************************/
-.panel {
+.daily-panel {
     width: 100%;
     margin: 0 auto;
     min-height: 60px;
@@ -27,7 +27,7 @@ html {
     background-color: #F8F8F8;
 }
 
-.panel:hover{
+.daily-panel:hover{
     background-color: #DDD;
 }
 
@@ -70,48 +70,53 @@ html {
     line-height: 14px;
 }
 
-.plus{
+.fold{
 
 }
 
-.minus{
+.expand{
     display: none;
 }
 
 
 /*******************************************************
-        Hourly Weather styling information
+        Hourly Weather Panel styling information
 ******************************************************/
 #hourly-panel{
     display: none;
     height: 200px;
-    background-color: yellow;
+    background-color: #9FB6CC;
 }
 
-.slider .ui-state-default {
-/*    background: none;*/
-    border-style: none;
+.ui-slider{
+    margin-top: 10%;
+    background: #CED0A0;
 }
+
+/* According to jQuery-ui slider documentation, custom slider handle should be created and appened
+   by adding ui-slider-handle class before initialization*/
 .ui-slider .ui-slider-handle{
     width:25px;
     height:75px;
     /*TODO: not sure why background color didn't change upon using background-color property but
       it is changed using background property without setting any image url*/
-    background: red;
+    background: #778899;
     border:none;
     outline: none;
 }
 
+/*  ui-slider: The track of the slider control.
+    ui-slider-handle: The slider handles.*/
 .ui-slider .ui-slider-handle:hover{
-    background: green;
+    background: #3C444C;
 }
 
 .ui-slider .ui-slider-handle:focus{
-    background: yellow;
+    background: #3C444C;
     outline: none;
 }
 
 .ui-slider .ui-slider-handle:active{
-    background: grey;
+    background: #3C444C;
     outline: 1px solid green;
 }
