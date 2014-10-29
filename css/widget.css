@@ -141,3 +141,27 @@ html {
  .hour-ticks span.odd {
      height: 8px;
 }
+
+/****** Hours properties ******/
+.hours .hour {
+  height: 5px;
+}
+
+.hours .hour{
+  display: inline-block;
+  width: 36px;
+  margin-left: 32.69px ;
+  text-align: center;
+  font-family: "AvenirNextCondensed-Medium", "Arial Narrow", Verdana, sans-serif;
+  font-size: 16px;
+  color: #222;
+}
+
+.hours .hour:first-child {
+    margin-left: 0%;
+}
+
+/* decrease the margin between 12AM and 2AM to center all hour tags under corresponding ticks(dashes)*/
+.hours .hour:nth-child(2) {
+    margin-left: 22px;
+}

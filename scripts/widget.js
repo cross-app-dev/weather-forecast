@@ -25,7 +25,7 @@ function buildWidget(weatherWidgetClass){
 //     });
 
     createDailyWeatherPanel(weatherWidgetClass , data);
-    //createHourlyWeatherPanel(data);
+//    createHourlyWeatherPanel(data);
 }
 
 function constructURL(){
@@ -150,6 +150,19 @@ function createHourlyWeatherPanel(data){
     for (var i=0; i< 24; i++){
         $hoursTick.append('<span class="'+getHoursTickClass(i)+'"></span>');
     }
+
+    /* create hours tags under the slider bar*/
+    $hours = $('<div class="hours"></div>').appendTo($("#hourly-panel"));
+    var timeTagObj = {am:"AM",pm:"PM"};
+    for (var prop in timeTagObj){
+        for(var i=2; i<=10; i+=2){
+//            var j = (i!==10)?"0"+i:i;
+            $hours.append('<span class="hour">'+i+timeTagObj[prop]+'</span>');
+        }
+    }
+    /* Finally insert 12AM/12PM in the appropriate locations on the sliding bar.*/
+    $(".hour:contains(2AM)").before('<span class="hour">12AM</span>');
+    $('<span class="hour">12PM</span>').insertBefore($(".hour:contains(2PM)"));
 }
 
 function getHoursTickClass(i){
