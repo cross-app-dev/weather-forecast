@@ -71,11 +71,11 @@ html {
     line-height: 14px;
 }
 
-.fold{
+.expand{
 
 }
 
-.expand{
+.fold{
     display: none;
 }
 

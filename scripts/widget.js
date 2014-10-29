@@ -87,8 +87,8 @@ function createDailyWeatherPanel(weatherWidgetClass , data){
 
     /* Add circular button to indicate that this section is expandable*/
     $button = $("<div></div>").addClass("circular-button").
-                append('<span class="fold">+</span>').
-                append('<span class="expand">-</span>').
+                append('<span class="expand">+</span>').
+                append('<span class="fold">-</span>').
                 appendTo($dailyPanel).
                 click(onDailyPanelClicked);
 
@@ -107,6 +107,12 @@ function onDailyPanelClicked(){
     $("#hourly-panel").slideToggle( "slow" );
     $(".expand").toggle();
     $(".fold").toggle();
+
+    if("none" === $(".expand").css("display")){
+        $("#slider").slider('value', 0);
+        $("#slider").slider('value', new Date().getHours());
+    }
+
 }
 
 function createHourlyWeatherPanel(data){
@@ -118,11 +124,9 @@ function createHourlyWeatherPanel(data){
         {
             min   : 0,  // This maps to 12am (mid-night)
             max   : 23, // This maps to 11 pm
-            value : 10, // TODO: set this value according to current time of the day.
-
-            /* set required listeners for slider, upon creation, sliding action and changing the
-               value.*/
-            create: onCreateSlider,
+            value : 0,
+            animate: 1000,
+            /* set required listeners for slider upon sliding action and value changing. */
             change: onChangeSliderValue,
             slide : onSlidingover
         });
