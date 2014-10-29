@@ -25,6 +25,7 @@ function buildWidget(weatherWidgetClass){
 //     });
 
     createDailyWeatherPanel(weatherWidgetClass , data);
+    console.log(data);
 //    createHourlyWeatherPanel(data);
 }
 
@@ -163,6 +164,30 @@ function createHourlyWeatherPanel(data){
     /* Finally insert 12AM/12PM in the appropriate locations on the sliding bar.*/
     $(".hour:contains(2AM)").before('<span class="hour">12AM</span>');
     $('<span class="hour">12PM</span>').insertBefore($(".hour:contains(2PM)"));
+
+    /* display detailed weather information for every hour such it includes:
+       humidity, cloud cover, temperature, wind speed, weather icon and summary description*/
+
+    /*  1. Create icon div for hourly weather
+        2. Append it to hourly panel*/
+    $hourlyWeatherIcon = $("<div></div>").addClass("hourly-icon-container").
+                        append('<canvas id="widget-forecast-hourly-icon" width="100" height="60"\
+                               </canvas>').
+                        appendTo($("#hourly-panel"));
+    /* Set icon of weather using skycons */
+    wdgtSetIcon("widget-forecast-hourly-icon", data.hourly.data[0].icon);
+
+    /* Add hourly weather summary and remove last full-stop or period*/
+    $("#hourly-panel").append('<p class="hourly-summary">' +
+                              data.hourly.data[0].summary.slice(0,-1) + '</p>');
+
+    $detailedInfoTable = $('<table id="hourly-detailed-table"></table>').appendTo($("#hourly-panel"));
+    $detailedInfoTable.append("<tr><th>Temp</th><th>Humidity</th><th>Wind</th>\                                            <th>Cloud Cover</th><tr>");
+    $row = $("<tr></tr>").appendTo($detailedInfoTable);
+    $("<td></td>").appendTo($row).text(data.hourly.data[0].temperature).append("<sup>o<sup>");
+    $("<td></td>").appendTo($row).text(data.hourly.data[0].humidity + " %");
+    $("<td></td>").appendTo($row).text(data.hourly.data[0].windSpeed + " kph");
+    $("<td></td>").appendTo($row).text(data.hourly.data[0].cloudCover + " Okta");
 }
 
 function getHoursTickClass(i){

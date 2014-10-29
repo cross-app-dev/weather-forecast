@@ -51,6 +51,7 @@ html {
 /*    outline: 1px solid red;*/
 }
 
+/*TODO: remove*/
 .widget-today-icon{
 
 }
@@ -84,7 +85,7 @@ html {
 ******************************************************/
 #hourly-panel{
     display: none;
-    height: 200px;
+    min-height: 200px;
     background-color: #9FB6CC;
 }
 
@@ -164,4 +165,42 @@ html {
 /* decrease the margin between 12AM and 2AM to center all hour tags under corresponding ticks(dashes)*/
 .hours .hour:nth-child(2) {
     margin-left: 22px;
+}
+
+/****** Detailed Weather properties ******/
+.hourly-summary{
+    display: inline-block;
+    width: 50%;
+    margin-left: 5%;
+    font-size: 1.5rem;
+    vertical-align: middle;
+    font-family: "AvenirNextCondensed-Medium", "Arial Narrow", Verdana, sans-serif;
+}
+
+.hourly-icon-container{
+    display: inline-block;
+    width: 100px;
+    height: 60px;
+    vertical-align: sub;
+    margin-top: 5%;
+    margin-left: 5%;
+}
+
+/*TODO: remove*/
+.widget-hourly-icon{
+
+}
+
+#hourly-detailed-table{
+    margin: 4px auto 0;
+    text-align: center;
+    width: 100%;
+}
+
+#hourly-temperature{
+    display: inline-block;
+    margin-left: 5%;
+    font-size: 1.5rem;
+    vertical-align: middle;
+    font-family: "AvenirNextCondensed-Medium", "Arial Narrow", Verdana, sans-serif;
 }
