@@ -195,6 +195,7 @@ html {
     margin: 4px auto 0;
     text-align: center;
     width: 100%;
+    font-family: "AvenirNextCondensed-Medium", "Arial Narrow", Verdana, sans-serif;
 }
 
 #hourly-temperature{

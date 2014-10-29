@@ -127,7 +127,7 @@ function createHourlyWeatherPanel(data){
             /* set required listeners for slider, upon creation, sliding action and changing the
                value.*/
             create: onCreateSlider,
-            change: onChangeSliderVlue,
+            change: onChangeSliderValue,
             slide : onSlidingover
         });
 
@@ -169,10 +169,6 @@ function createHourlyWeatherPanel(data){
     $detailedInfoTable = $('<table id="hourly-detailed-table"></table>').appendTo($("#hourly-panel"));
     $detailedInfoTable.append("<tr><th>Temp</th><th>Humidity</th><th>Wind</th>\                                            <th>Cloud Cover</th><tr>");
     $row = $("<tr></tr>").appendTo($detailedInfoTable);
-    $("<td></td>").appendTo($row).text(data.hourly.data[0].temperature).append("<sup>o<sup>");
-    $("<td></td>").appendTo($row).text(data.hourly.data[0].humidity + " %");
-    $("<td></td>").appendTo($row).text(data.hourly.data[0].windSpeed + " kph");
-    $("<td></td>").appendTo($row).text(data.hourly.data[0].cloudCover + " Okta");
 }
 
 function getHoursTickClass(i){
@@ -185,10 +181,21 @@ function onCreateSlider(event, ui){
     //$( "#sliderID" ).slider( "option", "value", 10 );
 }
 
-function onChangeSliderVlue(event ,ui){
-    console.log("value after sliding becomes: ", ui.value);
-}
+//function onChangeSliderVlue(event ,ui){
+//    console.log("value after sliding becomes: ", ui.value);
+//}
+//
+//function onSlidingover(event, ui){
+//    console.log("sliding value is ", ui.value);
+//}
 
-function onSlidingover(event, ui){
-    console.log("sliding value is ", ui.value);
+var onChangeSliderValue = onSlidingover = function(event, ui) {
+
+    /* Get the second row in the hourly detailed table. Note that eq filter uses zero-based index
+       Then clear that row to add updated table data information for the selected value. */
+    $row = $("#hourly-detailed-table tr:eq(1)").empty();
+    $("<td></td>").appendTo($row).text(data.hourly.data[ui.value].temperature).append("<sup>o<sup>");
+    $("<td></td>").appendTo($row).text(data.hourly.data[ui.value].humidity + " %");
+    $("<td></td>").appendTo($row).text(data.hourly.data[ui.value].windSpeed + " kph");
+    $("<td></td>").appendTo($row).text(data.hourly.data[ui.value].cloudCover + " Okta");
 }
