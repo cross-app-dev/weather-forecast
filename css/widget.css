@@ -87,11 +87,11 @@ html {
     display: none;
 /*    min-height: 200px;*/
     background-color: #9FB6CC;
+    padding-top: 5%;
 }
 
 /********      Slider properties  *******/
 .ui-slider{
-    margin-top: 10%;
     background: #CED0A0;
 }
 
