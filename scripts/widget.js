@@ -100,6 +100,7 @@ function createDailyWeatherPanel(weatherWidgetClass , data){
 
     /* create a container for inner hourly panel inside the daily panel.*/
     $dailyPanel.append('<div id="hourly-panel"></div>');
+    createHourlyWeatherPanel(data);
 }
 
 function onDailyPanelClicked(){
@@ -110,22 +111,6 @@ function onDailyPanelClicked(){
     $("#hourly-panel").slideToggle( "slow" );
     $(".expand").toggle();
     $(".fold").toggle();
-
-    /* toggle visibilty of child nodes for hourly panel. Note that this function is called after
-       already togggling the values of expand/fold classes. */
-    toggleFolding();
-}
-
-function toggleFolding(){
-    if ("none" === $(".fold").css("display")){
-        console.log("hourly panel expansion is done");
-        /* create all child nodes for the hourly weather panel. */
-        createHourlyWeatherPanel(data);
-    }else{
-        console.log("hourly panel folding is done");
-        /* Remove all child nodes of hourly panel. */
-        $("#hourly-panel").empty();
-    }
 }
 
 function createHourlyWeatherPanel(data){

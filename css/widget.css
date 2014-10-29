@@ -85,7 +85,7 @@ html {
 ******************************************************/
 #hourly-panel{
     display: none;
-    min-height: 200px;
+/*    min-height: 200px;*/
     background-color: #9FB6CC;
 }
 
