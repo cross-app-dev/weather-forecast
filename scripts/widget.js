@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function(){
     /*****************************************************************/
     var jqUiCss = document.createElement("link");
     jqUiCss.setAttribute("rel", "stylesheet");
-    jqUiCss.setAttribute("href", "//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css");
+    jqUiCss.setAttribute("href", "//code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css");
     document.querySelector("head").appendChild(jqUiCss);
 
     /*****************************************************************/
@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", function(){
     /*****************************************************************/
     var css = document.createElement("link");
     css.setAttribute("rel", "stylesheet");
-    /* TODO: check where widget.css should be located exactly? */
+    /* TODO: widget.css should be located on edumedia. */
     css.setAttribute("href", "css/widget.css");
     document.querySelector("head").appendChild(css);
 
@@ -32,8 +32,7 @@ document.addEventListener("DOMContentLoaded", function(){
     var jq = document.createElement("script");
     jq.addEventListener("load", buildForecastWidget );
     document.querySelector("head").appendChild(jq);
-//    jq.setAttribute("src","//code.jquery.com/jquery-1.10.2.js");
-    jq.setAttribute("src","//code.jquery.com/jquery-1.10.2.js");
+    jq.setAttribute("src","https://code.jquery.com/jquery-1.11.1.min.js");
 
     /*****************************************************************/
     /****      Load the skycons JS and apply it to the page       ****/
@@ -41,8 +40,8 @@ document.addEventListener("DOMContentLoaded", function(){
     var skyconsScript = document.createElement("script");
     skyconsScript.addEventListener("load",buildForecastWidget);
     document.querySelector("head").appendChild(skyconsScript);
-//    skyconsScript.setAttribute("src", "//cdnjs.cloudflare.com/ajax/libs/skycons/1396634940/skycons.min.js");
-    skyconsScript.setAttribute("src", "scripts/skycons.min.js");
+    skyconsScript.setAttribute("src",
+                               "//cdnjs.cloudflare.com/ajax/libs/skycons/1396634940/skycons.min.js");
 
     /*****************************************************************/
     /****      Load jQuery-UI and apply it to the page           ****/
@@ -50,8 +49,7 @@ document.addEventListener("DOMContentLoaded", function(){
     var jqUi = document.createElement("script");
     jqUi.addEventListener("load", buildForecastWidget );
     document.querySelector("head").appendChild(jqUi);
-//    jqUi.setAttribute("src","//code.jquery.com/ui/1.11.2/jquery-ui.js");
-    jqUi.setAttribute("src","//code.jquery.com/ui/1.11.2/jquery-ui.js");
+    jqUi.setAttribute("src","//code.jquery.com/ui/1.11.2/jquery-ui.min.js");
 });
 
 function buildForecastWidget(){
