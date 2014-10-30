@@ -142,22 +142,81 @@ var Icon = (function () {
 
 var HourlyWeather = (function () {
 
-  var privateMethod = function () {
-    alert('private method');
-  };
+    var getHoursTickClass = function (i){
+        return (i%2==0)? "even":"odd";
+    };
 
-  var someMethod = function () {
-    alert('public');
-    privateMethod();
-  };
+    var onSlidingover = function(event, ui) {
 
-  var anotherMethod = function () {
-    alert('public2');
-  };
+        var forecastData = ForecastAPI.getData();
+        console.debug(new Date(forecastData.hourly.data[ui.value].time * 1000));
+        /* Get the second row in the hourly detailed table. Note that eq filter uses zero-based index
+           Then clear that row to add updated table data information for the selected value. */
+        $row = $("#hourly-detailed-table tr:eq(1)").empty();
+        $("<td></td>").appendTo($row).
+                text(forecastData.hourly.data[ui.value].temperature).append("<sup>o<sup>");
+        $("<td></td>").appendTo($row).text(forecastData.hourly.data[ui.value].humidity*100 + " %");
+        $("<td></td>").appendTo($row).text(forecastData.hourly.data[ui.value].windSpeed + " kph");
+        $("<td></td>").appendTo($row).text(forecastData.hourly.data[ui.value].cloudCover + " Okta");
+
+        /* change corresponding weather icon and hourly summary. */
+        Icon.set("widget-forecast-hourly-icon", forecastData.hourly.data[ui.value].icon);
+        $(".hourly-summary").text(forecastData.hourly.data[ui.value].summary);
+    };
+
+    var createPanel = function (){
+        var $slider = $('<div id="slider"></div>')
+                        .appendTo($("#hourly-panel"));
+
+        /* create a slider using jquery-ui library for 24 hour of any any day*/
+        $slider.slider(
+            {
+                min    : 0,  // This maps to 12am (mid-night)
+                max    : 23, // This maps to 11 pm
+                value  : 0,  //initial value on slider
+                animate: 1000, //slide the handle smoothly when the user clicks on the slider track.
+                slide : onSlidingover //set listener for sliding action
+            });
+
+        /* create hours ticks dashes for even and odd hours*/
+        $hoursTick = $('<div class="hour-ticks"></div>').appendTo($("#hourly-panel"));
+        for (var i=0; i< 24; i++){
+            $hoursTick.append('<span class="'+getHoursTickClass(i)+'"></span>');
+        }
+
+        /* create hours tags under the slider bar*/
+        $hours = $('<div class="hours"></div>').appendTo($("#hourly-panel"));
+        var timeTagObj = {am:"AM",pm:"PM"};
+        for (var prop in timeTagObj){
+            for(var i=2; i<=10; i+=2){
+                $hours.append('<span class="hour">'+i+timeTagObj[prop]+'</span>');
+            }
+        }
+        /* Finally insert 12AM/12PM in the appropriate locations on the sliding bar.*/
+        $(".hour:contains(2AM)").before('<span class="hour">12AM</span>');
+        $('<span class="hour">12PM</span>').insertBefore($(".hour:contains(2PM)"));
+
+        /* display detailed weather information for every hour such it includes:
+           humidity, cloud cover, temperature, wind speed, weather icon and summary description*/
+
+        /*  1. Create icon div for hourly weather
+            2. Append it to hourly panel*/
+        $hourlyWeatherIcon = $("<div></div>").addClass("hourly-icon-container").
+                            append('<canvas id="widget-forecast-hourly-icon" width="100" height="60"\
+                                   </canvas>').
+                            appendTo($("#hourly-panel"));
+
+        /* Add hourly weather summary and remove last full-stop or period*/
+        $("#hourly-panel").append('<p class="hourly-summary"></p>');
+
+        $detailedInfoTable = $('<table id="hourly-detailed-table"></table>').
+                            appendTo($("#hourly-panel"));
+        $detailedInfoTable.append("<tr><th>Temp</th><th>Humidity</th><th>Wind</th>\                                            <th>Cloud Cover</th><tr>");
+        $row = $("<tr></tr>").appendTo($detailedInfoTable);
+    };
 
   return {
-    someMethod: someMethod,
-    anotherMethod: anotherMethod
+    createPanel: createPanel
   };
 
 })();
@@ -219,7 +278,7 @@ var DailyWeather = (function () {
     $dailyPanel.append('<div id="hourly-panel"></div>');
 
     /* create all required div elements for hourly weather panel. */
-    createHourlyWeatherPanel();
+    HourlyWeather.createPanel();
 }
 
   return {
@@ -237,76 +296,4 @@ function buildWidget(){
     ForecastAPI.requestDataAsync();
     /*setTimeout(function (){console.log("Timeout:", ForecastAPI.getData());}, 1000);*/
     //DailyWeather.createPanel();
-}
-
-function createHourlyWeatherPanel(){
-    var $slider = $('<div id="slider"></div>')
-                    .appendTo($("#hourly-panel"));
-
-    /* create a slider using jquery-ui library for 24 hour of any any day*/
-    $slider.slider(
-        {
-            min    : 0,  // This maps to 12am (mid-night)
-            max    : 23, // This maps to 11 pm
-            value  : 0,  //initial value on slider
-            animate: 1000, //slide the handle smoothly when the user clicks on the slider track.
-            change: onChangeSliderValue, //set listener for value changing
-            slide : onSlidingover //set listener for sliding action
-        });
-
-    /* create hours ticks dashes for even and odd hours*/
-    $hoursTick = $('<div class="hour-ticks"></div>').appendTo($("#hourly-panel"));
-    for (var i=0; i< 24; i++){
-        $hoursTick.append('<span class="'+getHoursTickClass(i)+'"></span>');
-    }
-
-    /* create hours tags under the slider bar*/
-    $hours = $('<div class="hours"></div>').appendTo($("#hourly-panel"));
-    var timeTagObj = {am:"AM",pm:"PM"};
-    for (var prop in timeTagObj){
-        for(var i=2; i<=10; i+=2){
-            $hours.append('<span class="hour">'+i+timeTagObj[prop]+'</span>');
-        }
-    }
-    /* Finally insert 12AM/12PM in the appropriate locations on the sliding bar.*/
-    $(".hour:contains(2AM)").before('<span class="hour">12AM</span>');
-    $('<span class="hour">12PM</span>').insertBefore($(".hour:contains(2PM)"));
-
-    /* display detailed weather information for every hour such it includes:
-       humidity, cloud cover, temperature, wind speed, weather icon and summary description*/
-
-    /*  1. Create icon div for hourly weather
-        2. Append it to hourly panel*/
-    $hourlyWeatherIcon = $("<div></div>").addClass("hourly-icon-container").
-                        append('<canvas id="widget-forecast-hourly-icon" width="100" height="60"\
-                               </canvas>').
-                        appendTo($("#hourly-panel"));
-
-    /* Add hourly weather summary and remove last full-stop or period*/
-    $("#hourly-panel").append('<p class="hourly-summary"></p>');
-
-    $detailedInfoTable = $('<table id="hourly-detailed-table"></table>').appendTo($("#hourly-panel"));
-    $detailedInfoTable.append("<tr><th>Temp</th><th>Humidity</th><th>Wind</th>\                                            <th>Cloud Cover</th><tr>");
-    $row = $("<tr></tr>").appendTo($detailedInfoTable);
-}
-
-function getHoursTickClass(i){
-    return (i%2==0)? "even":"odd";
-}
-
-var onChangeSliderValue = onSlidingover = function(event, ui) {
-
-    console.debug(new Date(forecastData.hourly.data[ui.value].time * 1000));
-    /* Get the second row in the hourly detailed table. Note that eq filter uses zero-based index
-       Then clear that row to add updated table data information for the selected value. */
-    $row = $("#hourly-detailed-table tr:eq(1)").empty();
-    $("<td></td>").appendTo($row).
-            text(forecastData.hourly.data[ui.value].temperature).append("<sup>o<sup>");
-    $("<td></td>").appendTo($row).text(forecastData.hourly.data[ui.value].humidity*100 + " %");
-    $("<td></td>").appendTo($row).text(forecastData.hourly.data[ui.value].windSpeed + " kph");
-    $("<td></td>").appendTo($row).text(forecastData.hourly.data[ui.value].cloudCover + " Okta");
-
-    /* change corresponding weather icon and hourly summary. */
-    wdgtSetIcon("widget-forecast-hourly-icon", forecastData.hourly.data[ui.value].icon);
-    $(".hourly-summary").text(forecastData.hourly.data[ui.value].summary);
 }
