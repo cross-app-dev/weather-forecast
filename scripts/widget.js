@@ -1,113 +1,175 @@
-var forecastData;
+/* Resources module is used to load all files required to build weather widget. */
+var Resources = (function () {
 
-/**************************
-Add a link for a CSS file that styles .mywidget
-Add a script tag that points to CDN version of jQuery 1.*
-Add a script tag that loads your script file from http://m.edumedia.ca/
-Add a script tag that loads skycons minified version from CDN to load weather icons.
-**************************/
-var scriptsLoaded = 0;
+    /* counter for number of files that have been loaded. */
+    var scriptsLoaded = 0;
+    var MAXIMUM_NUM_OF_ASYNC_FILES = 4;
 
-document.addEventListener("DOMContentLoaded", function(){
-    /*****************************************************************/
-    /****      Load jQuery-UI-Css and apply it to the page        ****/
-    /*****************************************************************/
-    var jqUiCss = document.createElement("link");
-    jqUiCss.setAttribute("rel", "stylesheet");
-    jqUiCss.setAttribute("href", "//code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css");
-    document.querySelector("head").appendChild(jqUiCss);
+    /* loadCSS: is used to add required css file to current document and set a callback function
+        upon loading the file successfully. */
+    var loadCSS = function (path, callback) {
+        var css = document.createElement("link");
+        css.addEventListener("load", callback );
+        css.setAttribute("rel", "stylesheet");
+        css.setAttribute("href", path);
+        document.querySelector("head").appendChild(css);
+    };
 
-    /*****************************************************************/
-    /****      Load the CSS file and apply it to the page         ****/
-    /*****************************************************************/
-    var css = document.createElement("link");
-    css.setAttribute("rel", "stylesheet");
-    /* TODO: widget.css should be located on edumedia. */
-    css.setAttribute("href", "css/widget.css");
-    document.querySelector("head").appendChild(css);
+    /* loadJS: is used to add required JS file to current document and set a callback function
+        upon loading the file successfully. */
+    var loadJS = function (path, callback) {
+        var js = document.createElement("script");
+        js.addEventListener("load", callback );
+        document.querySelector("head").appendChild(js);
+        js.setAttribute("src",path);
+    };
 
-    /*****************************************************************/
-    /****     Load the jQuery file and apply it to the page       ****/
-    /*****************************************************************/
-    var jq = document.createElement("script");
-    jq.addEventListener("load", buildForecastWidget );
-    document.querySelector("head").appendChild(jq);
-    jq.setAttribute("src","https://code.jquery.com/jquery-1.11.1.min.js");
-
-    /*****************************************************************/
-    /****      Load the skycons JS and apply it to the page       ****/
-    /*****************************************************************/
-    var skyconsScript = document.createElement("script");
-    skyconsScript.addEventListener("load",buildForecastWidget);
-    document.querySelector("head").appendChild(skyconsScript);
-    skyconsScript.setAttribute("src",
-                               "//cdnjs.cloudflare.com/ajax/libs/skycons/1396634940/skycons.min.js");
-
-    /*****************************************************************/
-    /****      Load jQuery-UI and apply it to the page           ****/
-    /*****************************************************************/
-    var jqUi = document.createElement("script");
-    jqUi.addEventListener("load", buildForecastWidget );
-    document.querySelector("head").appendChild(jqUi);
-    jqUi.setAttribute("src","//code.jquery.com/ui/1.11.2/jquery-ui.min.js");
-});
-
-function buildForecastWidget(){
-    console.log("current file that is loaded is:",  this);
-    scriptsLoaded++;
-
-    if(scriptsLoaded === 3){
-      //call the function in My widget script to load the JSON and build the widget
-      console.log("all three are scripts loaded");
-      buildWidget(".weather-forecast");
+    /* loadJQueryUI: is used to fetch jquery-ui library then start building weather widget.
+        Note that it must be loaded after loading of jquery js file to avoid runtime errors. */
+    var loadJQueryUI = function(){
+        loadJS("//code.jquery.com/ui/1.11.2/jquery-ui.min.js", buildWidget);
     }
-}
 
+    /* onFilesLoadedAsync: is callback function after fetching all files asynchronously. */
+    var onFilesLoadedAsync = function(){
+        console.debug("current file that is loaded is:",  this);
+        scriptsLoaded++;
 
-function buildWidget(weatherWidgetClass){
-    console.log("Start to fetch data from Forecast.io website using Ajax");
-    var xhr = $.ajax(
+        if(scriptsLoaded === MAXIMUM_NUM_OF_ASYNC_FILES){
+          console.log("asynchronous loading of scripts is done");
+          loadJQueryUI("//code.jquery.com/ui/1.11.2/jquery-ui.min.js", buildWidget);
+        }
+    }
+
+    var load = function () {
+        console.debug('Loading required files for widget');
+
+        loadCSS("//code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css",
+                onFilesLoadedAsync);
+        /*TODO: widget.css should be fetched from edumedia server. */
+        loadCSS("css/widget.css", onFilesLoadedAsync);
+        loadJS("//cdnjs.cloudflare.com/ajax/libs/skycons/1396634940/skycons.min.js",
+              onFilesLoadedAsync);
+        loadJS("//code.jquery.com/jquery-1.11.1.min.js",onFilesLoadedAsync);
+    };
+
+  return {
+    load: load
+  };
+
+})();
+
+var ForecastAPI = (function () {
+
+    var forecastData;
+    var constructURL = function (){
+        var FORECAST_API_KEY="28595388f228499527db3647095809fc";
+        var ALGONQUIN_LATITUDE = "45.348391";
+        var ALGONQUIN_LONGITUDE = "-75.757045";
+
+        /* JS Date object returns number of milliseconds since 1 January, 1970 meanwhile
+           Forecast TIME field should be number of seconds since 1 January, 1970.
+           So round divide result object by 1000 to convert from msec to sec.
+           Finally, round the result to remove fractions (if any). */
+        var TIME = Math.round((new Date())/1000);
+
+        /* Get the weather in SI metric: Celsius, mm , kPa ... etc.
+           According to Forecast API documentation, canadian units are Identical to si, except that
+           windSpeed is in kilometers per hour.*/
+        var UNITS = "units=ca";
+
+        var url = "https://api.forecast.io/forecast/" +
+            FORECAST_API_KEY + "/" +
+            ALGONQUIN_LATITUDE + "," +
+            ALGONQUIN_LONGITUDE +"," +
+            TIME + "?" +
+            UNITS
+        ;
+
+        return url;
+    }
+
+    var requestDataAsync = function () {
+        var xhr = $.ajax(
         {
             url :  constructURL(),
             dataType :"jsonp",
             type: "GET"
-        }).done( function( data ){
+        }).done(function (data){
             console.log("forecast data is loaded succsfully");
             forecastData = data;
-            createDailyWeatherPanel(weatherWidgetClass);
+            console.debug(forecastData);
         }).fail( function( ){
 
             console.log("failed to load forecast data");
             console.log( xhr.status );
             //TODO: handle error cases.
         });
-}
+    };
 
-function constructURL(){
-    var FORECAST_API_KEY="28595388f228499527db3647095809fc";
-    var ALGONQUIN_LATITUDE = "45.348391";
-    var ALGONQUIN_LONGITUDE = "-75.757045";
+    var getData = function (){
+        return forecastData;
+    };
 
-    /* JS Date object returns number of milliseconds since 1 January, 1970 meanwhile
-       Forecast TIME field should be number of seconds since 1 January, 1970.
-       So round divide result object by 1000 to convert from msec to sec.
-       Finally, round the result to remove fractions (if any). */
-    var TIME = Math.round((new Date())/1000);
+  return {
+      requestDataAsync: requestDataAsync,
+      getData: getData
+  };
 
-    /* Get the weather in SI metric: Celsius, mm , kPa ... etc.
-       According to Forecast API documentation, canadian units are Identical to si, except that
-       windSpeed is in kilometers per hour.*/
-    var UNITS = "units=ca";
+})();
 
-    var url = "https://api.forecast.io/forecast/" +
-        FORECAST_API_KEY + "/" +
-        ALGONQUIN_LATITUDE + "," +
-        ALGONQUIN_LONGITUDE +"," +
-        TIME + "?" +
-        UNITS
-    ;
+var DailyWeather = (function () {
 
-    return url;
+  var privateMethod = function () {
+    alert('private method');
+  };
+
+  var someMethod = function () {
+    alert('public');
+    privateMethod();
+  };
+
+  var anotherMethod = function () {
+    alert('public2');
+  };
+
+  return {
+    someMethod: someMethod,
+    anotherMethod: anotherMethod
+  };
+
+})();
+
+var HourlyWeather = (function () {
+
+  var privateMethod = function () {
+    alert('private method');
+  };
+
+  var someMethod = function () {
+    alert('public');
+    privateMethod();
+  };
+
+  var anotherMethod = function () {
+    alert('public2');
+  };
+
+  return {
+    someMethod: someMethod,
+    anotherMethod: anotherMethod
+  };
+
+})();
+document.addEventListener("DOMContentLoaded", function(){
+    Resources.load();
+});
+
+function buildWidget(weatherWidgetClass){
+    console.log("Start to fetch data from Forecast.io website using Ajax");
+    ForecastAPI.requestDataAsync();
+    setTimeout(function (){console.log("Timeout");}, 1000);
+    console.log(ForecastAPI.getData());
 }
 
 function wdgtSetIcon( canvasID, weatherState){
