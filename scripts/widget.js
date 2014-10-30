@@ -8,7 +8,6 @@ function buildWidget(weatherWidgetClass){
             type: "GET"
         }).done( function( data ){
             console.log("forecast data is loaded succsfully");
-            console.debug( data );
             forecastData = data;
             createDailyWeatherPanel(weatherWidgetClass);
         }).fail( function( ){
@@ -24,13 +23,22 @@ function constructURL(){
     var ALGONQUIN_LATITUDE = "45.348391";
     var ALGONQUIN_LONGITUDE = "-75.757045";
 
-    /* Get the weather in SI metric: Celsius, mm , kPa ... etc*/
+    /* JS Date object returns number of milliseconds since 1 January, 1970 meanwhile
+       Forecast TIME field should be number of seconds since 1 January, 1970.
+       So round divide result object by 1000 to convert from msec to sec.
+       Finally, round the result to remove fractions (if any). */
+    var TIME = Math.round((new Date())/1000);
+
+    /* Get the weather in SI metric: Celsius, mm , kPa ... etc.
+       According to Forecast API documentation, canadian units are Identical to si, except that
+       windSpeed is in kilometers per hour.*/
     var UNITS = "units=ca";
 
     var url = "https://api.forecast.io/forecast/" +
         FORECAST_API_KEY + "/" +
         ALGONQUIN_LATITUDE + "," +
-        ALGONQUIN_LONGITUDE +"?" +
+        ALGONQUIN_LONGITUDE +"," +
+        TIME + "?" +
         UNITS
     ;
 
@@ -161,13 +169,14 @@ function getHoursTickClass(i){
 
 var onChangeSliderValue = onSlidingover = function(event, ui) {
 
+    console.debug(new Date(forecastData.hourly.data[ui.value].time * 1000));
     /* Get the second row in the hourly detailed table. Note that eq filter uses zero-based index
        Then clear that row to add updated table data information for the selected value. */
     $row = $("#hourly-detailed-table tr:eq(1)").empty();
     $("<td></td>").appendTo($row).
             text(forecastData.hourly.data[ui.value].temperature).append("<sup>o<sup>");
     $("<td></td>").appendTo($row).text(forecastData.hourly.data[ui.value].humidity*100 + " %");
-    $("<td></td>").appendTo($row).text(forecastData.hourly.data[ui.value].windSpeed + " mph");
+    $("<td></td>").appendTo($row).text(forecastData.hourly.data[ui.value].windSpeed + " kph");
     $("<td></td>").appendTo($row).text(forecastData.hourly.data[ui.value].cloudCover + " Okta");
 
     /* change corresponding weather icon and hourly summary. */
