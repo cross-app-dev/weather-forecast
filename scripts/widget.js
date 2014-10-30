@@ -1,32 +1,22 @@
+var forecastData;
 function buildWidget(weatherWidgetClass){
-
-
     console.log("Start to fetch data from Forecast.io website using Ajax");
-//    var xhr = $.ajax({
-//    url :  constructURL(),
-//    dataType :"jsonp",
-//    //xhrFields: {
-//    //    withCredentials: true
-//    //},
-//    type: "GET"}).done( function( data ){
-//
-//        // this function will run if the AJAX call is successful
-//        console.log("forecast data is loaded succsfully");
-//        console.log( data );
-//        createDailyWeatherPanel(cssWeatherClass , data);
-//     }).fail( function( ){
-//
-//        //this function will run if the AJAX call fails for any reason.
-//        console.log("failed to load forecast data");
-//        console.log( xhr.status );
-//
-//        //TODO: handle error cases.
-//
-//     });
+    var xhr = $.ajax(
+        {
+            url :  constructURL(),
+            dataType :"jsonp",
+            type: "GET"
+        }).done( function( data ){
+            console.log("forecast data is loaded succsfully");
+            console.debug( data );
+            forecastData = data;
+            createDailyWeatherPanel(weatherWidgetClass);
+        }).fail( function( ){
 
-    createDailyWeatherPanel(weatherWidgetClass , data);
-    console.log(data);
-//    createHourlyWeatherPanel(data);
+            console.log("failed to load forecast data");
+            console.log( xhr.status );
+            //TODO: handle error cases.
+        });
 }
 
 function constructURL(){
@@ -61,13 +51,11 @@ function wdgtSetIcon( canvasID, weatherState){
     skycons.play();
 }
 
-function createDailyWeatherPanel(weatherWidgetClass , data){
+function createDailyWeatherPanel(weatherWidgetClass){
 
     /*  1. Create new div element and set its class to panel class.
-        2. Set click listener for daily panel div element.
-        3. append panel div to current weather forecast div*/
+        2. append panel div to current weather forecast div*/
     var $dailyPanel = $("<div></div>").addClass("daily-panel").
-//             click(onDailyPanelClicked).
              appendTo($(weatherWidgetClass));
 
     /* Create paragraph for today*/
@@ -80,12 +68,12 @@ function createDailyWeatherPanel(weatherWidgetClass , data){
                                </canvas>').
                         appendTo($dailyPanel);
     /* Set icon of weather using skycons */
-    wdgtSetIcon("widget-forecast-today-icon", data.daily.data[0].icon);
+    wdgtSetIcon("widget-forecast-today-icon", forecastData.daily.data[0].icon);
 
     /* Add today weather summary and remove last full-stop or period*/
-    $dailyPanel.append('<p class="summary">' +data.daily.data[0].summary.slice(0,-1) +'</p>');
+    $dailyPanel.append('<p class="summary">' +forecastData.daily.data[0].summary.slice(0,-1) +'</p>');
 
-    /* Add circular button to indicate that this section is expandable*/
+    /* Add circular button to indicate that daily weather panel is expandable*/
     $button = $("<div></div>").addClass("circular-button").
                 append('<span class="expand">+</span>').
                 append('<span class="fold">-</span>').
@@ -96,7 +84,7 @@ function createDailyWeatherPanel(weatherWidgetClass , data){
     $dailyPanel.append('<div id="hourly-panel"></div>');
 
     /* create all required div elements for hourly weather panel. */
-    createHourlyWeatherPanel(data);
+    createHourlyWeatherPanel();
 }
 
 function onDailyPanelClicked(){
@@ -108,6 +96,7 @@ function onDailyPanelClicked(){
     $(".expand").toggle();
     $(".fold").toggle();
 
+    /*In case of expansion, let the slider moves from the begining till the current hour of the day.*/
     if("none" === $(".expand").css("display")){
         $("#slider").slider('value', 0);
         $("#slider").slider('value', new Date().getHours());
@@ -115,20 +104,19 @@ function onDailyPanelClicked(){
 
 }
 
-function createHourlyWeatherPanel(data){
+function createHourlyWeatherPanel(){
     var $slider = $('<div id="slider"></div>')
                     .appendTo($("#hourly-panel"));
 
     /* create a slider using jquery-ui library for 24 hour of any any day*/
     $slider.slider(
         {
-            min   : 0,  // This maps to 12am (mid-night)
-            max   : 23, // This maps to 11 pm
-            value : 0,
-            animate: 1000,
-            /* set required listeners for slider upon sliding action and value changing. */
-            change: onChangeSliderValue,
-            slide : onSlidingover
+            min    : 0,  // This maps to 12am (mid-night)
+            max    : 23, // This maps to 11 pm
+            value  : 0,  //initial value on slider
+            animate: 1000, //slide the handle smoothly when the user clicks on the slider track.
+            change: onChangeSliderValue, //set listener for value changing
+            slide : onSlidingover //set listener for sliding action
         });
 
     /* create hours ticks dashes for even and odd hours*/
@@ -142,7 +130,6 @@ function createHourlyWeatherPanel(data){
     var timeTagObj = {am:"AM",pm:"PM"};
     for (var prop in timeTagObj){
         for(var i=2; i<=10; i+=2){
-//            var j = (i!==10)?"0"+i:i;
             $hours.append('<span class="hour">'+i+timeTagObj[prop]+'</span>');
         }
     }
@@ -159,12 +146,9 @@ function createHourlyWeatherPanel(data){
                         append('<canvas id="widget-forecast-hourly-icon" width="100" height="60"\
                                </canvas>').
                         appendTo($("#hourly-panel"));
-    /* Set icon of weather using skycons */
-    wdgtSetIcon("widget-forecast-hourly-icon", data.hourly.data[0].icon);
 
     /* Add hourly weather summary and remove last full-stop or period*/
-    $("#hourly-panel").append('<p class="hourly-summary">' +
-                              data.hourly.data[0].summary.slice(0,-1) + '</p>');
+    $("#hourly-panel").append('<p class="hourly-summary"></p>');
 
     $detailedInfoTable = $('<table id="hourly-detailed-table"></table>').appendTo($("#hourly-panel"));
     $detailedInfoTable.append("<tr><th>Temp</th><th>Humidity</th><th>Wind</th>\                                            <th>Cloud Cover</th><tr>");
@@ -175,23 +159,18 @@ function getHoursTickClass(i){
     return (i%2==0)? "even":"odd";
 }
 
-function onCreateSlider(event, ui){
-    console.log("slider has been created with value = ", $(this).slider("option", "value"));
-    /*To set slider value at run-time use: */
-    //$( "#sliderID" ).slider( "option", "value", 10 );
-}
-
 var onChangeSliderValue = onSlidingover = function(event, ui) {
 
     /* Get the second row in the hourly detailed table. Note that eq filter uses zero-based index
        Then clear that row to add updated table data information for the selected value. */
     $row = $("#hourly-detailed-table tr:eq(1)").empty();
-    $("<td></td>").appendTo($row).text(data.hourly.data[ui.value].temperature).append("<sup>o<sup>");
-    $("<td></td>").appendTo($row).text(data.hourly.data[ui.value].humidity + " %");
-    $("<td></td>").appendTo($row).text(data.hourly.data[ui.value].windSpeed + " kph");
-    $("<td></td>").appendTo($row).text(data.hourly.data[ui.value].cloudCover + " Okta");
+    $("<td></td>").appendTo($row).
+            text(forecastData.hourly.data[ui.value].temperature).append("<sup>o<sup>");
+    $("<td></td>").appendTo($row).text(forecastData.hourly.data[ui.value].humidity*100 + " %");
+    $("<td></td>").appendTo($row).text(forecastData.hourly.data[ui.value].windSpeed + " mph");
+    $("<td></td>").appendTo($row).text(forecastData.hourly.data[ui.value].cloudCover + " Okta");
 
     /* change corresponding weather icon and hourly summary. */
-    wdgtSetIcon("widget-forecast-hourly-icon", data.hourly.data[ui.value].icon);
-    $(".hourly-summary").text(data.hourly.data[ui.value].summary);
+    wdgtSetIcon("widget-forecast-hourly-icon", forecastData.hourly.data[ui.value].icon);
+    $(".hourly-summary").text(forecastData.hourly.data[ui.value].summary);
 }

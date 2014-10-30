@@ -10,7 +10,6 @@ html {
     width: 90%;
     max-width: 800px;
     margin: 0 auto;
-/*    outline: 1px solid green;*/
 }
 
 /*******************************************************
@@ -35,25 +34,17 @@ html {
     display: inline-block;
     width: 20%;
     text-transform: uppercase;
-/*    outline: 1px solid orange;*/
 }
 
 .summary{
     display: inline-block;
     width: 40%;
-/*    outline: 1px solid green;*/
 }
 
 .today-icon-container{
     display: inline-block;
     width: 20%;
     vertical-align: middle;
-/*    outline: 1px solid red;*/
-}
-
-/*TODO: remove*/
-.widget-today-icon{
-
 }
 
 .circular-button {
@@ -85,7 +76,6 @@ html {
 ******************************************************/
 #hourly-panel{
     display: none;
-/*    min-height: 200px;*/
     background-color: #9FB6CC;
     padding-top: 5%;
 }
@@ -100,8 +90,8 @@ html {
 .ui-slider .ui-slider-handle{
     width:25px;
     height:75px;
-    /*TODO: not sure why background color didn't change upon using background-color property but
-      it is changed using background property without setting any image url*/
+    /* Not sure why background color didn't change upon using background-color property but
+      it is changed using background property without setting url for an image*/
     background: #778899;
     border:none;
     outline: none;
@@ -109,7 +99,7 @@ html {
 }
 
 /*  ui-slider: The track of the slider control.
-    ui-slider-handle: The slider handles.*/
+    ui-slider-handle: The slider handle that is dragged.*/
 .ui-slider .ui-slider-handle:hover{
     background: #3C444C;
 }
@@ -184,11 +174,6 @@ html {
     vertical-align: sub;
     margin-top: 5%;
     margin-left: 5%;
-}
-
-/*TODO: remove*/
-.widget-hourly-icon{
-
 }
 
 #hourly-detailed-table{
