@@ -102,7 +102,7 @@ var ForecastAPI = (function () {
             DailyWeather.createPanel(".weather-forecast");
         }).fail( function( ){
 
-            console.log("failed to load forecast data");
+            console.error("failed to load forecast data");
             console.log( xhr.status );
             //TODO: handle error cases.
         });
@@ -152,14 +152,25 @@ var HourlyWeather = (function () {
         console.debug(new Date(forecastData.hourly.data[ui.value].time * 1000));
         /* Get the second row in the hourly detailed table. Note that eq filter uses zero-based index
            Then clear that row to add updated table data information for the selected value. */
-        $row = $("#hourly-detailed-table tr:eq(1)").empty();
-        $("<td></td>").appendTo($row).
-                text(forecastData.hourly.data[ui.value].temperature).append("<sup>o<sup>");
-        /*round the humidity value since some times the value contains long fraction*/
-        $("<td></td>").appendTo($row).text(Math.round(
-            forecastData.hourly.data[ui.value].humidity*100) + " %");
-        $("<td></td>").appendTo($row).text(forecastData.hourly.data[ui.value].windSpeed + " kph");
-        $("<td></td>").appendTo($row).text(forecastData.hourly.data[ui.value].cloudCover + " Okta");
+        $("#hourly-detailed-table tr:eq(1) td").each(function(index){
+            switch(index){
+                    case 0:
+                        $(this).text(forecastData.hourly.data[ui.value].temperature).
+                            append("<sup>o<sup>");
+                        break;
+                    case 1:
+                        $(this).text(Math.round(forecastData.hourly.data[ui.value].humidity*100) +
+                                       "%");
+                        break;
+                    case 2:
+                        $(this).text(forecastData.hourly.data[ui.value].windSpeed + " kph");
+                        break;
+                    case 3:
+                        $(this).text(forecastData.hourly.data[ui.value].cloudCover + " Okta");
+                        break;
+            }
+
+        });
 
         /* change corresponding weather icon and hourly summary. */
         Icon.set("widget-forecast-hourly-icon", forecastData.hourly.data[ui.value].icon);
@@ -167,10 +178,41 @@ var HourlyWeather = (function () {
     };
 
     var createPanel = function (){
-        var $slider = $('<div id="slider"></div>')
-                        .appendTo($("#hourly-panel"));
+
+        var panelHTML = '<div id="slider"></div>';
+
+        /* create hours ticks dashes for even and odd hours*/
+        panelHTML   +=   '<div class="hour-ticks">';
+        for (var i=0; i< 24; i++){
+            panelHTML += '<span class="'+getHoursTickClass(i)+'"></span>';
+        }
+        panelHTML +='</div>';
+
+        /* create hours tags under the slider bar*/
+        panelHTML += '<div class="hours">';
+        panelHTML += '<span class="hour">12AM</span>'
+        for (var i=2; i<24; i+=2){
+            var hour = (i % 12 || 12) + ((i<12)?"AM":"PM");
+            panelHTML += '<span class="hour">' + hour + '</span>';
+        }
+
+        /*  1. Create icon div for hourly weather
+            2. Hourly weather summary
+            3. Table for detailed hourly information with four table data cells:
+                humidity, cloud cover, temperature, wind speed*/
+        panelHTML += '<div class="hourly-icon-container">\
+                        <canvas id="widget-forecast-hourly-icon" width="100" height="60"</canvas>\                             </div>';
+        panelHTML += '<p class="hourly-summary"></p>';
+
+        panelHTML += '<table id="hourly-detailed-table">\
+                        <tr><th>Temp</th><th>Humidity</th><th>Wind</th><th>Cloud Cover</th></tr>\
+                        <tr><td></td><td></td><td></td><td></td></tr>\
+                     </table>';
+
+        $("#hourly-panel").append(panelHTML);
 
         /* create a slider using jquery-ui library for 24 hour of any any day*/
+        var $slider = $("#slider");
         $slider.slider(
             {
                 min    : 0,  // This maps to 12am (mid-night)
@@ -182,42 +224,6 @@ var HourlyWeather = (function () {
                 done inside onButtonClicked */
 
             });
-
-        /* create hours ticks dashes for even and odd hours*/
-        $hoursTick = $('<div class="hour-ticks"></div>').appendTo($("#hourly-panel"));
-        for (var i=0; i< 24; i++){
-            $hoursTick.append('<span class="'+getHoursTickClass(i)+'"></span>');
-        }
-
-        /* create hours tags under the slider bar*/
-        $hours = $('<div class="hours"></div>').appendTo($("#hourly-panel"));
-        var timeTagObj = {am:"AM",pm:"PM"};
-        for (var prop in timeTagObj){
-            for(var i=2; i<=10; i+=2){
-                $hours.append('<span class="hour">'+i+timeTagObj[prop]+'</span>');
-            }
-        }
-        /* Finally insert 12AM/12PM in the appropriate locations on the sliding bar.*/
-        $(".hour:contains(2AM)").before('<span class="hour">12AM</span>');
-        $('<span class="hour">12PM</span>').insertBefore($(".hour:contains(2PM)"));
-
-        /* display detailed weather information for every hour such it includes:
-           humidity, cloud cover, temperature, wind speed, weather icon and summary description*/
-
-        /*  1. Create icon div for hourly weather
-            2. Append it to hourly panel*/
-        $hourlyWeatherIcon = $("<div></div>").addClass("hourly-icon-container").
-                            append('<canvas id="widget-forecast-hourly-icon" width="100" height="60"\
-                                   </canvas>').
-                            appendTo($("#hourly-panel"));
-
-        /* Add hourly weather summary and remove last full-stop or period*/
-        $("#hourly-panel").append('<p class="hourly-summary"></p>');
-
-        $detailedInfoTable = $('<table id="hourly-detailed-table"></table>').
-                            appendTo($("#hourly-panel"));
-        $detailedInfoTable.append("<tr><th>Temp</th><th>Humidity</th><th>Wind</th>\                                            <th>Cloud Cover</th><tr>");
-        $row = $("<tr></tr>").appendTo($detailedInfoTable);
     };
 
   return {
@@ -249,38 +255,41 @@ var DailyWeather = (function () {
 
     var createPanel = function (weatherWidgetClass){
 
-    /*  1. Create new div element and set its class to panel class.
-        2. append panel div to current weather forecast div*/
-    var $dailyPanel = $("<div></div>").addClass("daily-panel").
-             appendTo($(weatherWidgetClass));
+    /* Create new div element and set its class to panel class.*/
+    var htmlPanel = '"<div class="daily-panel">';
 
     /* Create paragraph for today*/
-    $dailyPanel.append('<p class="today">TODAY</p>');
+    htmlPanel += '<p class="today">TODAY</p>';
 
-    /* 1. Create icon div for average weather of the whole day.
-       2. Append it to daily panel*/
-    $dailyWeatherIcon = $("<div></div>").addClass("today-icon-container").
-                        append('<canvas id="widget-forecast-today-icon" width="36" height="36"\
-                               </canvas>').
-                        appendTo($dailyPanel);
+    /* Create icon div for average weather of the whole day.*/
+    htmlPanel += '<div class="today-icon-container">';
+    htmlPanel += '<canvas id="widget-forecast-today-icon" width="36" height="36" </canvas>';
+    htmlPanel += '</div>'; // closing tage for div with class today-icon-container
 
     forecastData = ForecastAPI.getData();
 
-    /* Set icon of weather using skycons */
-    Icon.set("widget-forecast-today-icon", forecastData.daily.data[0].icon);
-
     /* Add today weather summary and remove last full-stop or period*/
-    $dailyPanel.append('<p class="summary">' +forecastData.daily.data[0].summary.slice(0,-1) +'</p>');
+    htmlPanel += '<p class="summary">' + forecastData.daily.data[0].summary.slice(0,-1) + '</p>';
 
     /* Add circular button to indicate that daily weather panel is expandable*/
-    $button = $("<div></div>").addClass("circular-button").
-                append('<span class="expand">+</span>').
-                append('<span class="fold">-</span>').
-                appendTo($dailyPanel).
-                click(onButtonClicked);
+    htmlPanel += '<div class="circular-button">';
+    htmlPanel += '<span class="expand">+</span>';
+    htmlPanel += '<span class="fold">-</span>';
+    htmlPanel += '</div>'; //closing tag for div with class circular-buton
 
     /* create a container for inner hourly panel inside the daily panel.*/
-    $dailyPanel.append('<div id="hourly-panel"></div>');
+    htmlPanel += '<div id="hourly-panel"></div>';
+
+    htmlPanel +='</div>'; //closing tag for div with class daily-panel
+
+    /* append panel div html string to current weather forecast div */
+    $(weatherWidgetClass).append(htmlPanel);
+
+    /* set callback function upon clicking the circular button. */
+    $(".circular-button").click(onButtonClicked);
+
+    /* Set icon of weather using skycons */
+    Icon.set("widget-forecast-today-icon", forecastData.daily.data[0].icon);
 
     /* create all required div elements for hourly weather panel. */
     HourlyWeather.createPanel();
