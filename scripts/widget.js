@@ -146,7 +146,7 @@ var HourlyWeather = (function () {
         return (i%2==0)? "even":"odd";
     };
 
-    var onSlidingover = function(event, ui) {
+    var onSlidingOver = onChangeValue = function(event, ui) {
 
         var forecastData = ForecastAPI.getData();
         console.debug(new Date(forecastData.hourly.data[ui.value].time * 1000));
@@ -175,7 +175,10 @@ var HourlyWeather = (function () {
                 max    : 23, // This maps to 11 pm
                 value  : 0,  //initial value on slider
                 animate: 1000, //slide the handle smoothly when the user clicks on the slider track.
-                slide : onSlidingover //set listener for sliding action
+                slide : onSlidingOver, //set listener for sliding action
+                change: onChangeValue /* set listner after changing the slider value programmatically as
+                done inside onButtonClicked */
+
             });
 
         /* create hours ticks dashes for even and odd hours*/
