@@ -155,7 +155,9 @@ var HourlyWeather = (function () {
         $row = $("#hourly-detailed-table tr:eq(1)").empty();
         $("<td></td>").appendTo($row).
                 text(forecastData.hourly.data[ui.value].temperature).append("<sup>o<sup>");
-        $("<td></td>").appendTo($row).text(forecastData.hourly.data[ui.value].humidity*100 + " %");
+        /*round the humidity value since some times the value contains long fraction*/
+        $("<td></td>").appendTo($row).text(Math.round(
+            forecastData.hourly.data[ui.value].humidity*100) + " %");
         $("<td></td>").appendTo($row).text(forecastData.hourly.data[ui.value].windSpeed + " kph");
         $("<td></td>").appendTo($row).text(forecastData.hourly.data[ui.value].cloudCover + " Okta");
 
