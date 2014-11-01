@@ -24,7 +24,11 @@ html {
     border-top: 1px solid #DDD;
     border-bottom: 1px solid #DDD;
     cursor: pointer;
-    background-color: #F8F8F8;
+
+    background: -webkit-radial-gradient(white, grey);
+    background: -o-radial-gradient(white, grey);
+    background: -moz-radial-gradient(white, grey);
+    background: radial-gradient(white, grey);
 }
 
 .daily-panel:hover{
@@ -53,7 +57,7 @@ html {
     width: 20px !important;
     height: 20px !important;
     border-radius: 50% !important;
-    background-color: #aaa;
+    background-color: #7E5AD9;
     color: #fff;
     text-align: center;
 }
@@ -77,7 +81,6 @@ html {
 ******************************************************/
 #hourly-panel{
     display: none;
-    background-color: #9FB6CC;
     padding-top: 5%;
 }
 
@@ -93,7 +96,7 @@ html {
     height:75px;
     /* Not sure why background color didn't change upon using background-color property but
       it is changed using background property without setting url for an image*/
-    background: #FFF;
+    background: #7E5AD9;
     border:none;
     outline: none;
     opacity: 0.5;
@@ -102,17 +105,15 @@ html {
 /*  ui-slider: The track of the slider control.
     ui-slider-handle: The slider handle that is dragged.*/
 .ui-slider .ui-slider-handle:hover{
-    background: #FFF;
+
 }
 
 .ui-slider .ui-slider-handle:focus{
-    background: #FFF;
     outline: none;
 }
 
 .ui-slider .ui-slider-handle:active{
-    background: #FFF;
-    outline: 2px solid #D94AD4;
+    outline: 1px solid black;
 }
 
 
