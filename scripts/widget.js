@@ -256,7 +256,7 @@ var DailyWeather = (function () {
     var createPanel = function (weatherWidgetClass){
 
     /* Create new div element and set its class to panel class.*/
-    var htmlPanel = '"<div class="daily-panel">';
+    var htmlPanel = '<div class="daily-panel">';
 
     /* Create paragraph for today*/
     htmlPanel += '<p class="today">TODAY</p>';
