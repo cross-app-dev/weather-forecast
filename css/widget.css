@@ -83,7 +83,7 @@ html {
 
 /********      Slider properties  *******/
 .ui-slider{
-    background: #CED0A0;
+    background: #D9CC26;
 }
 
 /* According to jQuery-ui slider documentation, custom slider handle should be created and appened
@@ -93,7 +93,7 @@ html {
     height:75px;
     /* Not sure why background color didn't change upon using background-color property but
       it is changed using background property without setting url for an image*/
-    background: #778899;
+    background: #FFF;
     border:none;
     outline: none;
     opacity: 0.5;
@@ -102,24 +102,24 @@ html {
 /*  ui-slider: The track of the slider control.
     ui-slider-handle: The slider handle that is dragged.*/
 .ui-slider .ui-slider-handle:hover{
-    background: #3C444C;
+    background: #FFF;
 }
 
 .ui-slider .ui-slider-handle:focus{
-    background: #3C444C;
+    background: #FFF;
     outline: none;
 }
 
 .ui-slider .ui-slider-handle:active{
-    background: #3C444C;
-    outline: 1px solid green;
+    background: #FFF;
+    outline: 2px solid #D94AD4;
 }
 
 
 /****** Hours ticks properties ******/
 .hour-ticks span {
     display: inline-block;
-    border: 1px solid red;
+    border: 1px solid #D94AD4;
 /*    margin-left: 32.69px;*/
     margin-left: 3.93%;
 }
