@@ -65,6 +65,9 @@ var ForecastAPI = (function () {
         var FORECAST_API_KEY="28595388f228499527db3647095809fc";
         var ALGONQUIN_LATITUDE = "45.348391";
         var ALGONQUIN_LONGITUDE = "-75.757045";
+        /* Exclude some number of data blocks from the API response. This is useful for reducing latency
+           and saving cache space.*/
+        var EXCULDED_BLOCKS= "exclude=minutely,alerts,flags";
 
         /* JS Date object returns number of milliseconds since 1 January, 1970 meanwhile
            Forecast TIME field should be number of seconds since 1 January, 1970.
@@ -82,7 +85,8 @@ var ForecastAPI = (function () {
             ALGONQUIN_LATITUDE + "," +
             ALGONQUIN_LONGITUDE +"," +
             TIME + "?" +
-            UNITS
+            UNITS + "&" +
+            EXCULDED_BLOCKS
         ;
 
         return url;
