@@ -234,6 +234,7 @@ var HourlyWeather = (function () {
 var DailyWeather = (function () {
 
     var forecastData;
+    var weekDays = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 
     var onButtonClicked = function (){
         console.debug("dialy panel button has been clicked");
@@ -258,7 +259,7 @@ var DailyWeather = (function () {
     var htmlPanel = '<div class="daily-panel">';
 
     /* Create paragraph for today*/
-    htmlPanel += '<p class="today">TODAY</p>';
+    htmlPanel += '<p class="today">'+ weekDays[new Date().getDay()] +'</p>';
 
     /* Create icon div for average weather of the whole day.*/
     htmlPanel += '<div class="today-icon-container">';
