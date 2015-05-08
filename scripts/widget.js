@@ -46,7 +46,7 @@ var Resources = (function () {
 
         loadCSS("//code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css",
                 onFilesLoadedAsync);
-        loadCSS("//m.edumedia.ca/show0017/mad9014/widget-resources/widget.css", onFilesLoadedAsync);
+        loadCSS("css/widget.css", onFilesLoadedAsync);
         loadJS("//cdnjs.cloudflare.com/ajax/libs/skycons/1396634940/skycons.min.js",
               onFilesLoadedAsync);
         loadJS("//code.jquery.com/jquery-1.11.1.min.js",onFilesLoadedAsync);
